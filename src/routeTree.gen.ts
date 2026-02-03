@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ZustandIndexRouteImport } from './routes/zustand/index'
+import { Route as Speech2TextIndexRouteImport } from './routes/speech-2-text/index'
 import { Route as ReduxIndexRouteImport } from './routes/redux/index'
 import { Route as ReactQueryIndexRouteImport } from './routes/react-query/index'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const ZustandIndexRoute = ZustandIndexRouteImport.update({
   id: '/zustand/',
   path: '/zustand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Speech2TextIndexRoute = Speech2TextIndexRouteImport.update({
+  id: '/speech-2-text/',
+  path: '/speech-2-text/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReduxIndexRoute = ReduxIndexRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/react-query/': typeof ReactQueryIndexRoute
   '/redux/': typeof ReduxIndexRoute
+  '/speech-2-text/': typeof Speech2TextIndexRoute
   '/zustand/': typeof ZustandIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/react-query': typeof ReactQueryIndexRoute
   '/redux': typeof ReduxIndexRoute
+  '/speech-2-text': typeof Speech2TextIndexRoute
   '/zustand': typeof ZustandIndexRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/react-query/': typeof ReactQueryIndexRoute
   '/redux/': typeof ReduxIndexRoute
+  '/speech-2-text/': typeof Speech2TextIndexRoute
   '/zustand/': typeof ZustandIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/react-query/' | '/redux/' | '/zustand/'
+  fullPaths: '/' | '/react-query/' | '/redux/' | '/speech-2-text/' | '/zustand/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/react-query' | '/redux' | '/zustand'
-  id: '__root__' | '/' | '/react-query/' | '/redux/' | '/zustand/'
+  to: '/' | '/react-query' | '/redux' | '/speech-2-text' | '/zustand'
+  id:
+    | '__root__'
+    | '/'
+    | '/react-query/'
+    | '/redux/'
+    | '/speech-2-text/'
+    | '/zustand/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ReactQueryIndexRoute: typeof ReactQueryIndexRoute
   ReduxIndexRoute: typeof ReduxIndexRoute
+  Speech2TextIndexRoute: typeof Speech2TextIndexRoute
   ZustandIndexRoute: typeof ZustandIndexRoute
 }
 
@@ -83,6 +99,13 @@ declare module '@tanstack/react-router' {
       path: '/zustand'
       fullPath: '/zustand/'
       preLoaderRoute: typeof ZustandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/speech-2-text/': {
+      id: '/speech-2-text/'
+      path: '/speech-2-text'
+      fullPath: '/speech-2-text/'
+      preLoaderRoute: typeof Speech2TextIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/redux/': {
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ReactQueryIndexRoute: ReactQueryIndexRoute,
   ReduxIndexRoute: ReduxIndexRoute,
+  Speech2TextIndexRoute: Speech2TextIndexRoute,
   ZustandIndexRoute: ZustandIndexRoute,
 }
 export const routeTree = rootRouteImport
