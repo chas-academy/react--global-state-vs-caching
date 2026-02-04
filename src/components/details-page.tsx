@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import type { ReactNode } from "react";
 
@@ -53,15 +53,28 @@ interface Props {
 export default function DetailsPage({ species, children }: Props) {
   const { data, error } = useGetPokemon(species);
 
-  if (error) return <p>Error: {error.message} :/</p>;
-
+  if (error) {
+    return (
+      <Dialog>
+        <DialogDescription>Detaljsida för pokémon</DialogDescription>
+        <DialogTrigger>{children}</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="capitalize">Kunde inte hittas</DialogTitle>
+          </DialogHeader>
+          <p>Error: {error.message} :/</p>
+        </DialogContent>
+      </Dialog>
+    );
+  }
   return (
     <Dialog>
+      <DialogDescription>Detaljsida för pokémon</DialogDescription>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="capitalize">{data?.name}</DialogTitle>
-          </DialogHeader>
+        </DialogHeader>
         <div className="flex gap-2 mb-4">
           <Sprite sprite={data?.sprites?.front_default ?? ""} label="Default" />
           <Sprite sprite={data?.sprites?.front_shiny ?? ""} label="Shiny" />
