@@ -20,6 +20,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useState } from "react";
+import { chunk } from "remeda";
 
 export const Route = createFileRoute("/the-list/")({
   component: RouteComponent,
@@ -28,10 +29,20 @@ export const Route = createFileRoute("/the-list/")({
 function RouteComponent() {
   const { country } = Route.useSearch();
   const { data } = useGetUniversityList(country);
+  // const data = [
+  //   {
+  //     country: "India",
+  //     domains: ["atharvacoe.ac.in"],
+  //     web_pages: ["https://atharvacoe.ac.in"],
+  //     name: "Atharva College of Engineering",
+  //     alpha_two_code: "IN",
+  //     "state-province": "Mumbai",
+  //   },
+  // ];
   const universitiesTotal = data?.length ?? 0;
   const pageSize = 20;
-  const totalPages = Math.ceil(universitiesTotal / pageSize);
-  // const paginatedList = chunk(data, pageSize);
+  const pagesTotal = Math.ceil(universitiesTotal / pageSize);
+  const paginatedData = chunk(data ?? [], pageSize);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -52,7 +63,7 @@ function RouteComponent() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((uni) => (
+        {paginatedData[currentPage - 1]?.map((uni) => (
           <TableRow key={crypto.randomUUID()}>
             <TableCell className="font-semibold">{uni.name}</TableCell>
             <TableCell>{uni.country ?? "-"}</TableCell>
@@ -74,6 +85,13 @@ function RouteComponent() {
             </TableCell>
           </TableRow>
         ))}
+        {Array.from({
+          length: pageSize - (paginatedData[currentPage - 1]?.length ?? 0),
+        }).map(() => (
+          <TableRow key={crypto.randomUUID()}>
+            <TableCell colSpan={5} className="h-9.75" />
+          </TableRow>
+        ))}
       </TableBody>
       <TableFooter>
         <TableRow>
@@ -81,33 +99,71 @@ function RouteComponent() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive={currentPage === 1}>
-                    {currentPage - 1 > 0 ? currentPage - 1 : 1}
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    isActive={currentPage !== 1 || currentPage !== totalPages}
-                  >
-                    {currentPage}
-                  </PaginationLink>
+                  <PaginationPrevious
+                    onClick={() => {
+                      if (currentPage !== 1) {
+                        setCurrentPage(currentPage - 1);
+                      }
+                    }}
+                  />
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink
-                    href="#"
-                    isActive={currentPage === totalPages}
+                    onClick={() => {
+                      if (currentPage !== 1) {
+                        const decrement = currentPage === pagesTotal ? 2 : 1;
+                        setCurrentPage(currentPage - decrement);
+                      }
+                    }}
+                    isActive={currentPage === 1}
                   >
-                    {currentPage + 1 <= totalPages
-                      ? currentPage + 1
-                      : totalPages}
+                    {currentPage > 1 && currentPage === pagesTotal
+                      ? currentPage - 2 : currentPage > 1 ? currentPage - 1 : 1}
                   </PaginationLink>
                 </PaginationItem>
+                {pagesTotal > 1 && (
+                  <>
+                    <PaginationItem>
+                      <PaginationLink
+                        isActive={
+                          currentPage !== 1 && currentPage !== pagesTotal
+                        }
+                      >
+                        {currentPage == 1
+                          ? currentPage + 1
+                          : currentPage === pagesTotal
+                            ? currentPage - 1
+                            : currentPage}
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={() => {
+                          if (currentPage !== pagesTotal) {
+                            const increment = currentPage === 1 ? 2 : 1;
+
+                            setCurrentPage(currentPage + increment);
+                          }
+                        }}
+                        isActive={currentPage === pagesTotal}
+                      >
+                        {currentPage === 1
+                          ? currentPage + 2
+                          : currentPage + 1 <= pagesTotal
+                            ? currentPage + 1
+                            : pagesTotal}
+                      </PaginationLink>
+                    </PaginationItem>
+                  </>
+                )}
                 <PaginationItem>
-                  <PaginationNext href="#" />
+                  <PaginationNext
+                    onClick={() => {
+                      if (currentPage !== pagesTotal) {
+                        setCurrentPage(currentPage + 1);
+                      }
+                    }}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
