@@ -1,11 +1,32 @@
-# 🦍 Frontendutveckling med ramverk - Global state vs. caching
+# 🦍 Frontendutveckling med ramverk - Pagination
 
-I den här uppgiften kommer du lära dig om två global state managers, [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction) och [Redux](https://redux.js.org/), om caching med hjälp av [TanStack Query](https://tanstack.com/query/latest) samt hur dessa två koncept skiljer sig, vilka ändamål de lämpar sig för och deras för- och nackdelar.
+I den här uppgiften kommer du lära dig om paginering, ett vanligt optimeringsknep när man jobbar med långa arrayer med mycket data.
 
 ## 👨‍💻 Steg
 
 1. Installera alla dependencies som finns i package-filen
-2. Varje uppgift är uppdelad i sin egen route som innehåller instruktioner och en del boilerplate-kod
-   - Glön inte att installera respektive dependencies här också. Exempelvis `npm i zustand` innan du börjar jobba på Zustand-uppgiften
+2. Utgå från filen i routen `the-list`
+3. Lagra datan från `useGetUniversityList` en ny, tvådimensionell array efter `pageSize`. Dvs om `pageSize` är 20 så bör varje nästlade array innehålla 20 objekt
 
-3. Ta god tid på dig att läsa igenom den existerande koden innan du ger dig på att lösa uppgiften ifråga. Detta kommer ge dig en klarare förståelse för vad som ska göras, vilket i sin tur sparar dig tid. Du kommer spendera mer tid på att läsa än att skriva ny kod i arbetslivet och det är essentiellt för din framtida yrkesroll att utveckla den färdigheten.
+   ```ts
+   const paginatedData = [
+      [{
+         ...
+      },
+      {
+         ...
+      }]
+   ]
+   ```
+
+   - Om du inte vill skriva en egen funktion för detta kan du använda funktionen [`chunk`](https://remedajs.com/docs/#chunk) från det förinstallerade biblioteket [Remeda](https://remedajs.com/)
+
+4. Använd en passande React hook för att undgå att den paginerade arrayen skapas på nytt vid varje omrendering. Den borde se alltid se likadan ut såvida du inte bygger extrafunktionalitet som låter användaren justera antalet tabellrader per sida
+5. Använd de existerande UI-komponenterna för att skapa paginering, förslagsvis i `TableFooter`. Se [shadcns dokumentation](https://ui.shadcn.com/docs/components/radix/pagination) för kodexempel. Här kommer det krävas en del logik för att få `PaginationLink`-knapparna att visa rätt nummer samt för `PaginationNext` och `PaginationPrevious` att fungera fullt ut. Börja smått, kanske t.o.m hårdkoda`data` till att bara innehålla ett objekt till att börja med, och jobba dig därifrån. Du bör bl.a. ta höjd för följande saker:
+   - På första sidan, att:
+     - `PaginationPrevious`inte minskar värdet på `currentPage` med 1
+     - `PaginationLink` längst till höger har rätt siffra
+   - På sista sidan, att
+     - `PaginationNext`inte ökar värdet på `currentPage` med 1
+     - `PaginationLink` längst till vänster har rätt siffra
+   - Att `isActive` är sant på rätt `PaginationLink` även på första och sista sidan
