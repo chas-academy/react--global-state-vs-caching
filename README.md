@@ -4,9 +4,10 @@ I den här uppgiften kommer du lära dig om paginering, ett vanligt optimeringsk
 
 ## 👩‍💻 Steg
 
-1. Installera alla dependencies som finns i package-filen
-2. Utgå från filen i routen `the-list`
-3. Lagra datan från `useGetUniversityList` en ny, tvådimensionell array efter `pageSize`. Dvs om `pageSize` är 20 så bör varje nästlade array innehålla 20 objekt
+1. Skapa en `.env`-fil i projektets huvudkatalog och klistra in variablerna från klasskanalen på Slack.
+2. Installera alla dependencies som finns i package-filen
+3. Utgå från filen i routen `the-list`
+4. Lagra datan från `useGetUniversityList` en ny, tvådimensionell array efter `pageSize`. Dvs om `pageSize` är 20 så bör varje nästlade array innehålla 20 objekt
 
    ```ts
    const paginatedData = [
@@ -21,9 +22,9 @@ I den här uppgiften kommer du lära dig om paginering, ett vanligt optimeringsk
 
    - Om du inte vill skriva en egen funktion för detta kan du använda funktionen [`chunk`](https://remedajs.com/docs/#chunk) från det förinstallerade biblioteket [Remeda](https://remedajs.com/)
 
-4. Använd en passande React hook för att undgå att den paginerade arrayen skapas på nytt vid varje omrendering. Den borde se alltid se likadan ut såvida du inte bygger extrafunktionalitet som låter användaren justera antalet tabellrader per sida
-5. Se till att den paginerade arrayen används för att mappa igenom och skapa alla tabellrader
-6. Använd de existerande UI-komponenterna för att skapa paginering, förslagsvis i `TableFooter`. Se [shadcns dokumentation](https://ui.shadcn.com/docs/components/radix/pagination) för kodexempel. Här kommer det krävas en del logik för att få `PaginationLink`-knapparna att visa rätt nummer samt för `PaginationNext` och `PaginationPrevious` att fungera fullt ut. Börja smått, kanske t.o.m hårdkoda`data` till att bara innehålla ett objekt till att börja med, och jobba dig därifrån. Du bör bl.a. ta höjd för följande saker:
+5. Använd en passande React hook för att undgå att den paginerade arrayen skapas på nytt vid varje omrendering. Den borde se alltid se likadan ut såvida du inte bygger extrafunktionalitet som låter användaren justera antalet tabellrader per sida
+6. Se till att den paginerade arrayen används för att mappa igenom och skapa alla tabellrader
+7. Använd de existerande UI-komponenterna för att skapa paginering, förslagsvis i `TableFooter`. Se [shadcns dokumentation](https://ui.shadcn.com/docs/components/radix/pagination) för kodexempel. Här kommer det krävas en del logik för att få `PaginationLink`-knapparna att visa rätt nummer samt för `PaginationNext` och `PaginationPrevious` att fungera fullt ut. Börja smått, kanske t.o.m hårdkoda`data` till att bara innehålla ett objekt till att börja med, och jobba dig därifrån. Du bör bl.a. ta höjd för följande saker:
    - På första sidan, att:
      - `PaginationPrevious`inte minskar värdet på `currentPage` med 1
      - `PaginationLink` längst till höger har rätt siffra
